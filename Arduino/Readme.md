@@ -18,6 +18,10 @@ append to end of file : export PATH=$PATH:/home/pi/bin
 
 sudo reboot
 
+### Install core
+
+>arduino-cli core install arduino:avr
+
 
 ## CLI
 Arduino Command Line Interface (arduino-cli).
@@ -87,10 +91,38 @@ Use "arduino-cli [command] --help" for more information about a command.
 
 > arduino-cli board list
 
+## Librairies
+
+### Config
+
+### enable_unsafe_install
+
+set to true to enable the use of the --git-url and --zip-file flags with arduino-cli lib install. These are considered "unsafe" installation methods because they allow installing files that have not passed through the Library Manager submission process.
+
+nano ~/.arduino15/arduino-cli.yaml 
+
+### Install
+
+>arduino-cli lib install <library>
+
+>arduino-cli lib install --git-url https://github.com/arduino-libraries/WiFi101.git https://github.com/arduino-libraries/ArduinoBLE.git
+
+
+>arduino-cli lib install --zip-path /path/to/WiFi101.zip /path/to/ArduinoBLE.zip
+
+_>arduino-cli lib install --zip-path ~/eeg/Brain/kitschpatrol-Brain-v1.0-6-gefc9b2b.zip_
+
+>arduino-cli lib install --git-url https://github.com/Stanadigme/Brain.git
+
 ## Uploading
 
 ### Compile
 
 >arduino-cli compile -b 'fbqn' {sketch}
 
->arduino-cli compile -b arduino:avr:uno /home/pi/eeg/Brain/examples/BrainSerialTest.ino
+>arduino-cli compile -b arduino:avr:uno /home/pi/eeg/Brain/examples/BrainSerialTest/BrainSerialTest.ino
+
+### Upload
+>arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:samd:mkr1000 MyFirstSketch
+
+>arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno /home/pi/eeg/Brain/examples/BrainSerialTest/BrainSerialTest.ino

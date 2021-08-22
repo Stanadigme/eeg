@@ -11,3 +11,17 @@ wget https://github.com/processing/processing/releases/download/processing-0269-
 mkdir /home/pi/processing
 
 tar -xzvf /home/pi/processing-3.5.3-linux-armv6hf.tgz -C /home/pi/processing
+
+# Usage
+
+>cd processing
+
+>cd processing-3.5.3/
+
+>./processing
+
+## CLI
+
+>DISPLAY=:0 ./processing-java --sketch=/home/pi/HelloWorld --present
+
+>DISPLAY=:0 ./processing-java --sketch=/home/pi/eeg/BrainGrapher --present
