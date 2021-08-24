@@ -24,4 +24,6 @@ tar -xzvf /home/pi/processing-3.5.3-linux-armv6hf.tgz -C /home/pi/processing
 
 >DISPLAY=:0 ./processing-java --sketch=/home/pi/HelloWorld --present
 
->DISPLAY=:0 ./processing-java --sketch=/home/pi/eeg/BrainGrapher --present
+>DISPLAY=:0 /home/pi/processing/processing-3.5.3/processing-java --sketch=/home/pi/eeg/BrainGrapher --present
+
+> DISPLAY=:0 /home/pi/processing/processing-3.5.3/processing-java --sketch=/home/pi/eeg/Interfaces --present
