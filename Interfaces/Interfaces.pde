@@ -20,7 +20,7 @@ void setup() {
     println("[" + i + "] " + Serial.list()[i]);
   }
 
-  serial = new Serial(this, Serial.list()[0], 9600);
+  serial = new Serial(this, Serial.list()[2], 9600);
   serial.bufferUntil(10);
 }
 
