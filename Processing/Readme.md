@@ -22,8 +22,13 @@ tar -xzvf /home/pi/processing-3.5.3-linux-armv6hf.tgz -C /home/pi/processing
 
 ## CLI
 
+### RPi (Mac?)
+
 >DISPLAY=:0 ./processing-java --sketch=/home/pi/HelloWorld --present
 
 >DISPLAY=:0 /home/pi/processing/processing-3.5.3/processing-java --sketch=/home/pi/eeg/BrainGrapher --present
 
 > DISPLAY=:0 /home/pi/processing/processing-3.5.3/processing-java --sketch=/home/pi/eeg/Interfaces --present
+
+### Windows
+>C:\Users\Stan\Downloads\processing-4.0b1-windows64\processing-4.0b1\processing-java --sketch=C:\Users\Stan\Projects\eeg\Interfaces --run

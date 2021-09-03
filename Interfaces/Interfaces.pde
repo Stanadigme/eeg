@@ -4,9 +4,13 @@ import processing.serial.*;
 Serial serial;
 int packetCount = 0;
 
-float[] values = new float[11];
+int[] values = new int[11];
 float[] colorvalues = new float[3];
+float[] frequency = new float[3];
 float[] tempcolorvalues = new float[3];
+
+float startColor = 0;
+float endColor = height;
 
 float sleep = 0;
 float relaxed = 0;
@@ -14,22 +18,45 @@ float alert = 0;
 
 float hue_offset = height/4;
 
+void setColorFrequency() {
+  frequency[0] = startColor;
+  float deltaFreq = (endColor - startColor) / frequency.length;
+  for (int i = 1; i < frequency.length; i++) {
+    frequency[i] = frequency[0]+deltaFreq*i;
+  }
+  //printArray(frequency);
+}
+
+void init() {
+  endColor = height;
+  if (Serial.list().length > 0) {
+    println("Find your Arduino in the list below, note its [index]:\n");
+    for (int i = 0; i < Serial.list().length; i++) {
+      println("[" + i + "] " + Serial.list()[i]);
+    }
+    serial = new Serial(this, Serial.list()[0], 9600);
+    serial.bufferUntil(10);
+  }
+  else {
+    println("Aucun Arduino détecté ");
+  }
+  initParameters();
+  println(Parameters);
+}
+
 void setup() {
-  fullScreen();
-  colorMode(HSB, height, 100, 100,100);
+  //fullScreen();
+  size(640, 360);
+  colorMode(HSB, height, width, width,100);
   background(0);
   noStroke();
+  println(endColor);
+  init();
+  setColorFrequency();
   fill(102);
 
     // Set up serial connection
-  println("Find your Arduino in the list below, note its [index]:\n");
   
-  for (int i = 0; i < Serial.list().length; i++) {
-    println("[" + i + "] " + Serial.list()[i]);
-  }
-
-  serial = new Serial(this, Serial.list()[0], 9600);
-  serial.bufferUntil(10);
 }
 
 void setColorvalues() {
@@ -47,62 +74,65 @@ void setColorvalues() {
       alert = colorvalues[2];
     }
 
-    colorvalues[0] = colorvalues[0] / sleep;
-    colorvalues[1] = colorvalues[1] / relaxed;
-    colorvalues[2] = colorvalues[2] / alert;
     printArray(colorvalues);
+    for (int i = 0; i < Parameters.size(); ++i) {
+      int value = values[i];
+    Parameters.getJSONObject(i).setInt("value",value);
+    }
 }
 
 void draw() {
     loadPixels();
-    //printArray(colorvalues);
-    //color from = color(colorvalues[0],colorvalues[1],colorvalues[2]);
-    //color to = color(tempcolorvalues[0],tempcolorvalues[1],tempcolorvalues[2]);
-    
-    /*if (colorvalues != null) {
-        for (int x = 0; x < width; x++) {
-          for (int y = 0; y < height; y++) {
-              pixels[x+y*width] = color(colorvalues[0],colorvalues[1],colorvalues[2]);
-              //pixels[x+y*width] = lerpColor(from, to, (x+y)/(width+height));
-          }
-        }
-    }*/
-    /*
-      _height = variable en fonction de height
-      _state = array[3] des valeurs du casque
-      hue = f(_height)
-      saturation = f(_state, _height)
-      brightness = similaire à saturation ?
-    */
     if (colorvalues != null) {
-      for (int x = 0; x < height; x++) {
-        for (int y = 0; y < width; y++) {
-          float sat = getSat(x);
-          float bri = getBri(x,y);
-          //println(sat);
-          //print(bri);
-          //pixels[x*width+y] = color(x,sat,bri);
-          pixels[x*width+y] = color(x,sat,bri);
+      int from_i = 0;
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int i = 3; i < Parameters.size()-1; ++i) {
+              if (y == Parameters.getJSONObject(i).getInt("y")){
+                //int from_hue = Parameters.getJSONObject(i).getInt("hue");
+                //int to_hue = Parameters.getJSONObject(i+1).getInt("hue");
+                from_i = i;
+                break;
+              }
+            }
+            float e_y = float((y - Parameters.getJSONObject(from_i).getInt("y")))/float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")));
+            float e_y_ = float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")))/float((y - Parameters.getJSONObject(from_i).getInt("y")));
+            float e_x_bri = float(
+                (Parameters.getJSONObject(from_i).getInt("value")*Parameters.getJSONObject(from_i).getInt("max"))
+              )/float((
+                Parameters.getJSONObject(from_i).getInt("max") * Parameters.getJSONObject(from_i).getInt("min")
+              ));
+            float e_x_sat = float(
+                (Parameters.getJSONObject(from_i).getInt("value")*Parameters.getJSONObject(from_i).getInt("min"))
+              )/float((
+                Parameters.getJSONObject(from_i).getInt("min") * Parameters.getJSONObject(from_i).getInt("max")
+              ));
+            //println(e_y);
+          pixels[x+width*y] = color(
+            lerp(
+              Parameters.getJSONObject(from_i).getInt("hue"),
+              Parameters.getJSONObject(from_i+1).getInt("hue"),
+              e_y),
+            lerp(
+              0,
+              x,
+              e_x_sat*e_y_),
+            lerp(
+              0,
+              x,
+              e_x_bri*e_y));
         }
+        
       }
     }
-
     updatePixels();
 }
 
-float getSat(int x) {
-  float sat = 0;
-  if (x < height/3) {
-    sat = colorvalues[2];
-  }
-  else if (x < 2 * height/3) {
-    sat = colorvalues[1];
-  }
-  else {
-    sat = colorvalues[0];
-  }
-  return 100 * sat;
+float getColor(int x, int y) {
+  return x;
 }
+
+
 
 float getBri(int x,int y) {
   float bri = 0;
@@ -168,15 +198,21 @@ void serialEvent(Serial p) {
 
         // Zero the EEG power values if we don't have a signal.
         // Can be useful to leave them in for development.
-        if ((Integer.parseInt(incomingvalues[0]) == 200) && (i > 2)) {
-          newValue = 0;
+        
+        Parameters.getJSONObject(i).setInt("value",newValue);
+        if (Parameters.getJSONObject(i).getInt("max")  < newValue) {
+          Parameters.getJSONObject(i).setInt("max",newValue);
         }
-        values[i] = float(newValue);
+        if (Parameters.getJSONObject(i).getInt("min")  > newValue) {
+          Parameters.getJSONObject(i).setInt("min",newValue);
+        }
+        //values[i] = newValue;
         //print(newValue);
         //println(values[i]);
-
     }
-      setColorvalues();
+    print(Parameters);
+    //printArray(values);
+      //setColorvalues();
     }
   }
 }

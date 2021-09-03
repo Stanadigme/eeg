@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "processing",
+            "request": "launch",
+            "name": "Launch",
+            "program": "${workspaceFolder}\\Interfaces\\Interfaces.pde"
+        }
+    ]
+}

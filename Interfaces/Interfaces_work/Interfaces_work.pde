@@ -1,22 +1,32 @@
 import controlP5.*; 
 ControlP5 cp5;
 
-float[] colorvalues = new float[3];
-int offset = 0;
+int[] colorvalues = {0,30,180};
+temp
+int up = 0;
+int down = 0;
 
 void setup() {
   fullScreen();
-  colorMode(HSB, height, width, width,100);
+  colorMode(HSB, 360, width, width,100);
   background(0);
   noStroke();
   
   cp5 = new ControlP5(this);
   
-  cp5.addSlider("Offset")
-    .setPosition(25, 25) //x and y upper left corner
-    .setSize(25, height-50) //(width, height)50, 250
+  cp5.addSlider("Up")
+    .setPosition(15, 25) //x and y upper left corner
+    .setSize(25, (height/2)-40) //(width, height)50, 250
     .setRange(0, height) //slider range low,high
-    .setValue(offset) //start val
+    .setValue(up) //start val
+    .setColorValue(color(30,100,100))
+    .setBroadcast(true);
+    
+   cp5.addSlider("Down")
+    .setPosition(15, height/2+20) //x and y upper left corner
+    .setSize(25, (height/2) - 40) //(width, height)50, 250
+    .setRange(0, height) //slider range low,high
+    .setValue(down) //start val
     .setColorValue(color(30,100,100))
     .setBroadcast(true); 
   
@@ -35,20 +45,24 @@ void setup() {
   }
 }
 
-void Offset(int val) {
-  offset = val;
+void Up(int val) {
+  up = val;
+}
+
+void Down(int val) {
+  down = val;
+}
+
+void getColor(int y) {
+  
 }
 
 void draw() {
     loadPixels();
     for (int x = 0; x < height; x++) {
       for (int y = 0; y < width; y++) {
-        if (x+offset < height) {
-          pixels[x*width+y] = color(x+offset,y,y);
-        }
-        else {
-          pixels[x*width+y] = color(x-offset,width-y,width-y);
-        }
+        pixels[x *width+y] = color(x-up+down,width,width);
+        
       }
     }
     updatePixels();
