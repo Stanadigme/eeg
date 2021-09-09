@@ -3,6 +3,7 @@ import processing.serial.*;
 
 Serial serial;
 int packetCount = 0;
+int serialPort = 0;
 
 int[] values = new int[11];
 float[] colorvalues = new float[3];
@@ -27,14 +28,14 @@ void setColorFrequency() {
   //printArray(frequency);
 }
 
-void init() {
+void init( int serialPort) {
   endColor = height;
   if (Serial.list().length > 0) {
     println("Find your Arduino in the list below, note its [index]:\n");
     for (int i = 0; i < Serial.list().length; i++) {
       println("[" + i + "] " + Serial.list()[i]);
     }
-    serial = new Serial(this, Serial.list()[0], 9600);
+    serial = new Serial(this, Serial.list()[serialPort], 9600);
     serial.bufferUntil(10);
   }
   else {
@@ -51,7 +52,10 @@ void setup() {
   background(0);
   noStroke();
   println(endColor);
-  init();
+  if(args != null){
+    serialPort = arg[0]
+  }
+  init(serialPort);
   setColorFrequency();
   fill(102);
 
