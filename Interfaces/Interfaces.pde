@@ -53,7 +53,7 @@ void setup() {
   noStroke();
   println(endColor);
   if(args != null){
-    serialPort = arg[0]
+    serialPort = int(args[0]);
   }
   init(serialPort);
   setColorFrequency();
