@@ -116,7 +116,7 @@ void draw() {
             lerp(
               0,
               x,
-              e_x_sat*e_y_),
+              e_x_sat*e_y),
             lerp(
               0,
               x,
