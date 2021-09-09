@@ -9,4 +9,4 @@ cp "/home/pi/eeg/update.sh" "/home/pi/Desktop/update.sh"
 cd "/home/pi/Desktop/"
 chmod +x "/home/pi/Desktop/update.sh"
 
-#Test maj 2
+#Test maj 3
