@@ -15,7 +15,29 @@ String[] signals_name = {
 int[] hues = {
   0,
   0,
-  0  
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+};
+
+int[] y_pos = {
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
 };
 int min_hue = 0;
 int max_hue = 0;
@@ -23,9 +45,12 @@ int delta_hue = 0;
 
 JSONArray Parameters;
 
-void initParameters() {
+void initParameters(boolean auto) {
   Parameters = new JSONArray();
-  autoHue();
+  if(auto){
+     autoHue();
+  }
+  
   for (int i = 0; i < signals_name.length; ++i) {
     JSONObject signal = new JSONObject();
     signal.setString("name", signals_name[i]);
@@ -33,8 +58,14 @@ void initParameters() {
     signal.setInt("max",0);
     signal.setInt("value",0);
     if (i>2) {
-      signal.setInt("hue",min_hue + (i-3)*delta_hue);
-      signal.setInt("y",signal.getInt("hue")); //Ordonnée du signal
+      if(auto){
+        signal.setInt("hue",min_hue + (i-3)*delta_hue);
+        signal.setInt("y",signal.getInt("hue")); //Ordonnée du signal
+      }
+      else{
+        signal.setInt("hue",hues[i]);
+        signal.setInt("y",y_pos[i]); //Ordonnée du signal
+      }
     }
     Parameters.setJSONObject(i,signal);
   }

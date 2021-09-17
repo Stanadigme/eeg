@@ -41,12 +41,11 @@ void init( int serialPort) {
   else {
     println("Aucun Arduino détecté ");
   }
-  initParameters();
+  initParameters(true); //Changer en false pour suivre les valeurs imposées
   println(Parameters);
 }
 
 void setup() {
-  //fullScreen();
   size(640, 360);
   colorMode(HSB, height, width, width,100);
   background(0);
@@ -58,8 +57,6 @@ void setup() {
   init(serialPort);
   setColorFrequency();
   fill(102);
-
-    // Set up serial connection
   
 }
 
@@ -93,8 +90,6 @@ void draw() {
         for (int y = 0; y < height; y++) {
             for (int i = 3; i < Parameters.size()-1; ++i) {
               if (y == Parameters.getJSONObject(i).getInt("y")){
-                //int from_hue = Parameters.getJSONObject(i).getInt("hue");
-                //int to_hue = Parameters.getJSONObject(i+1).getInt("hue");
                 from_i = i;
                 break;
               }
@@ -117,14 +112,8 @@ void draw() {
               Parameters.getJSONObject(from_i).getInt("hue"),
               Parameters.getJSONObject(from_i+1).getInt("hue"),
               e_y),
-            lerp(
-              0,
-              x,
-              e_x_sat*e_y),
-            lerp(
-              0,
-              x,
-              e_x_bri*e_y));
+              width,
+            width);
         }
         
       }
