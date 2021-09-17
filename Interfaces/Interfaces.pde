@@ -97,14 +97,14 @@ void draw() {
             float e_y = float((y - Parameters.getJSONObject(from_i).getInt("y")))/float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")));
             float e_y_ = float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")))/float((y - Parameters.getJSONObject(from_i).getInt("y")));
             float e_x_bri = float(
-                (Parameters.getJSONObject(from_i).getInt("value")*Parameters.getJSONObject(from_i).getInt("max"))
+                (Parameters.getJSONObject(from_i).getInt("value"))
               )/float((
-                Parameters.getJSONObject(from_i).getInt("max") * Parameters.getJSONObject(from_i).getInt("min")
+                Parameters.getJSONObject(from_i).getInt("max")
               ));
             float e_x_sat = float(
-                (Parameters.getJSONObject(from_i).getInt("value")*Parameters.getJSONObject(from_i).getInt("min"))
+                (Parameters.getJSONObject(from_i).getInt("min"))
               )/float((
-                Parameters.getJSONObject(from_i).getInt("min") * Parameters.getJSONObject(from_i).getInt("max")
+                Parameters.getJSONObject(from_i).getInt("value")
               ));
             //println(e_y);
           pixels[x+width*y] = color(
@@ -112,8 +112,8 @@ void draw() {
               Parameters.getJSONObject(from_i).getInt("hue"),
               Parameters.getJSONObject(from_i+1).getInt("hue"),
               e_y),
-              width,
-            width);
+              lerp(0,width,e_x_bri),
+              lerp(0,width,e_x_bri));
         }
         
       }
