@@ -42,7 +42,7 @@ void init( int serialPort) {
     println("Aucun Arduino détecté ");
   }
   initParameters(true); //Changer en false pour suivre les valeurs imposées
-  println(Parameters);
+  // println(Parameters);
 }
 
 void setup() {
@@ -50,7 +50,7 @@ void setup() {
   colorMode(HSB, height, width, width,100);
   background(0);
   noStroke();
-  println(endColor);
+  // println(endColor);
   if(args != null){
     serialPort = int(args[0]);
   }
@@ -83,42 +83,8 @@ void setColorvalues() {
 }
 
 void draw() {
-    loadPixels();
-    if (colorvalues != null) {
-      int from_i = 0;
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            for (int i = 3; i < Parameters.size()-1; ++i) {
-              if (y == Parameters.getJSONObject(i).getInt("y")){
-                from_i = i;
-                break;
-              }
-            }
-            float e_y = float((y - Parameters.getJSONObject(from_i).getInt("y")))/float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")));
-            float e_y_ = float((Parameters.getJSONObject(from_i+1).getInt("y") - Parameters.getJSONObject(from_i).getInt("y")))/float((y - Parameters.getJSONObject(from_i).getInt("y")));
-            float e_x_bri = float(
-                (Parameters.getJSONObject(from_i).getInt("value"))
-              )/float((
-                Parameters.getJSONObject(from_i).getInt("max")
-              ));
-            float e_x_sat = float(
-                (Parameters.getJSONObject(from_i).getInt("min"))
-              )/float((
-                Parameters.getJSONObject(from_i).getInt("value")
-              ));
-            //println(e_y);
-          pixels[x+width*y] = color(
-            lerp(
-              Parameters.getJSONObject(from_i).getInt("hue"),
-              Parameters.getJSONObject(from_i+1).getInt("hue"),
-              e_y),
-              lerp(0,width,e_x_bri),
-              lerp(0,width,e_x_bri));
-        }
-        
-      }
-    }
-    updatePixels();
+  println(frameRate);
+    
 }
 
 float getColor(int x, int y) {
@@ -203,7 +169,7 @@ void serialEvent(Serial p) {
         //print(newValue);
         //println(values[i]);
     }
-    print(Parameters);
+    // print(Parameters);
     //printArray(values);
       //setColorvalues();
     }
