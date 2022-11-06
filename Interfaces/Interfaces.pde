@@ -50,7 +50,7 @@ void setup() {
     size(640, 360);
     colorMode(HSB, height, 1, 100,100);
     background(0);
-    noStroke();
+    // noStroke();
     //println(endColor);
     if (args != null) {
         serialPort = int(args[0]);
@@ -160,19 +160,43 @@ void serialEvent(Serial p) {
                 // Can be useful to leave them in for development.
                 
                 Parameters.getJSONObject(i).setInt("value",newValue);
-                if (Parameters.getJSONObject(i).getInt("max")  < newValue) {
-                    Parameters.getJSONObject(i).setInt("max",newValue);
-                }
-                if (Parameters.getJSONObject(i).getInt("min")  > newValue) {
-                    Parameters.getJSONObject(i).setInt("min",newValue);
-                }
+                // if (Parameters.getJSONObject(i).getInt("max")  < newValue) {
+                //     Parameters.getJSONObject(i).setInt("max",newValue);
+                // }
+                // if (Parameters.getJSONObject(i).getInt("min")  > newValue) {
+                //     Parameters.getJSONObject(i).setInt("min",newValue);
+                // }
+                computeVals(i);
                 //values[i] = newValue;
                 //print(newValue);
                 //println(values[i]);
             }
+            print(Parameters.getJSONObject(3));
             // print(Parameters);
             //printArray(values);
             //setColorvalues();
         }
 }
+}
+
+
+void computeVals(int index){
+    // Met à jour l'Array des values
+    // def min & max
+    int value = Parameters.getJSONObject(index).getInt("value");
+    int max = value;
+    int min = value;
+    for (int i = memory-1; i > 0; --i) {
+        int newVal = Parameters.getJSONObject(index).getJSONArray("values").getJSONObject(i-1).getInt("val");
+        Parameters.getJSONObject(index).getJSONArray("values").getJSONObject(i).setInt("val",newVal);
+        if(max < newVal){
+            max = newVal;
+        }
+        if(min > newVal){
+            min = newVal;
+        }
+    }
+    Parameters.getJSONObject(index).getJSONArray("values").getJSONObject(0).setInt("val",value);
+    Parameters.getJSONObject(index).setInt("max",max);
+    Parameters.getJSONObject(index).setInt("min",min);
 }
